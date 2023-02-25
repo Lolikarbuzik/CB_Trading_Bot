@@ -4,7 +4,7 @@ type Inventory = {}
 type Trade_Status = "Create" | "DeclineTrade" | "SendTrade" | "GotTrade"
 
 local TradingApi:{
-	GotTrade : RBXScriptSignal,
+	GotTrade : RBXScriptSignal | RBXScriptConnection,
 	GetTradeRequests : () -> (TradeList),
 	SkinsList : Skins_Demands,
 	Inventory : (Player?) -> Inventory,

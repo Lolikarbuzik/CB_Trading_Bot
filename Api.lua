@@ -15,7 +15,7 @@ local InventoryEvent:RemoteFunction = Remotes.Inventory
 local TradeEvent: RemoteEvent = Remotes.Trade
 
 local TradingApi:{
-	GotTrade : RBXScriptSignal,
+	GotTrade : RBXScriptConnection,
 	GetTradeRequests : () -> (TradeList),
 	SkinsList : Skins_Demands,
 	Inventory : (Player?) -> Inventory,
@@ -49,5 +49,7 @@ end
 function TradingApi:Trade(Player,Trade_Status)
 	return TradeEvent:FireServer(Player,Trade_Status)
 end
+
+_G.TradingApi = TradingApi
 
 return TradingApi
