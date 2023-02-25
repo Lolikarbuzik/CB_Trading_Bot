@@ -1,6 +1,6 @@
 --!strict
 
-local Signal: {new : () -> ()} = require(6654965987)
+local Signal: {new : () -> ()} = require(game:GetObjects("rbxassetid://6654965987")[1])
 
 type TradeList = {Player}
 type Skins_Demands = { string : number }
