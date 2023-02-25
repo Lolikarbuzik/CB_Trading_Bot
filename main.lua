@@ -1,0 +1,1 @@
+local TradingApi = loadstring(game:HttpGet())()
