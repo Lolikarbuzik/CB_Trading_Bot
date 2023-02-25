@@ -4,8 +4,8 @@ type Inventory = {}
 type Trade_Status = "Create" | "DeclineTrade" | "SendTrade" | "GotTrade"
 
 local TradingApi:{
-	GotTrade : RBXScriptSignal | RBXScriptConnection,
-	GetTradeRequests : () -> (TradeList),
+	GotTrade : RBXScriptSignal | {Destroy : () -> ()},
+	GetTraDeRequests : () -> (TradeList),
 	SkinsList : Skins_Demands,
 	Inventory : (Player?) -> Inventory,
 	Trade : (Trade_Status : Trade_Status, PlayerName : string) -> ()
@@ -14,4 +14,5 @@ local TradingApi:{
 
 TradingApi.GotTrade:Connect(function(plr)
     print(plr)
+    TradingApi.GotTrade:Destroy()
 end)

@@ -7,9 +7,12 @@ type Skins_Demands = { string : number }
 type Inventory = {}
 type Trade_Status = "Create" | "DeclineTrade" | "SendTrade" | "GotTrade"
 
+local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Remotes = ReplicatedStorage.Remotes
 local SkinValues = ReplicatedStorage.Values
+
+local Players = game:GetService("Players")
 
 local InventoryEvent:RemoteFunction = Remotes.Inventory
 local TradeEvent: RemoteEvent = Remotes.Trade
@@ -25,9 +28,10 @@ TradingApi.GotTrade = {}
 
 TradingApi.GotTrade = Signal.new()
 
-TradeEvent.OnClientEvent:Connect(function(Trade_Status : Trade_Status, Player : Player)
-    if Trade_Status == "GotTrade" then
-        TradingApi.GotTrade:Fire(Player)
+TradeEvent.OnClientEvent:Connect(function(Trade_Status : Trade_Status, PlayerName : string)
+    if Trade_Status == "GotTrade" and TradingApi.GotTrade then
+        print(PlayerName,Players:GetPlayerByUserId(Players:GetUserIdFromNameAsync(PlayerName)))
+        TradingApi.GotTrade:Fire(Players[PlayerName])
     end
 end)
 
