@@ -30,7 +30,6 @@ TradingApi.GotTrade = Signal.new()
 
 TradeEvent.OnClientEvent:Connect(function(Trade_Status : Trade_Status, PlayerName : string)
     if Trade_Status == "GotTrade" and TradingApi.GotTrade then
-        print(PlayerName,Players:GetPlayerByUserId(Players:GetUserIdFromNameAsync(PlayerName)))
         TradingApi.GotTrade:Fire(Players[PlayerName])
     end
 end)

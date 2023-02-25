@@ -11,8 +11,8 @@ local TradingApi:{
 	Trade : (Trade_Status : Trade_Status, PlayerName : string) -> ()
 } = loadstring(game:HttpGet("https://raw.githubusercontent.com/Lolikarbuzik/CB_Trading_Bot/main/Api.lua"))()
 
+print("Trading Bot started",TradingApi)
 
 TradingApi.GotTrade:Connect(function(plr)
-    print(plr)
-    TradingApi.GotTrade:Destroy()
+    print("Got Trade from",plr.Name)
 end)
