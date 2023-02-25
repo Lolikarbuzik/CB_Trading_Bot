@@ -19,11 +19,17 @@ local TradingApi:{
 	GetTradeRequests : () -> (TradeList),
 	SkinsList : Skins_Demands,
 	Inventory : (Player?) -> Inventory,
-	Trade : (Player,Trade_Status ) -> ()
+	Trade : (Trade_Status,Player ) -> ()
 } = {}
 TradingApi.GotTrade = {}
 
 TradingApi.GotTrade = Signal.new()
+
+TradeEvent.OnClientEvent:Connect(function(Trade_Status : Trade_Status, Player : Player)
+    if Trade_Status == "GotTrade" then
+        TradingApi.GotTrade:Fire(Player)
+    end
+end)
 
 function TradingApi:GetTradeRequests() : TradeList
 	return {}

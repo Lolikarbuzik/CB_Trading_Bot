@@ -8,6 +8,10 @@ local TradingApi:{
 	GetTradeRequests : () -> (TradeList),
 	SkinsList : Skins_Demands,
 	Inventory : (Player?) -> Inventory,
-	Trade : (Player,Trade_Status ) -> ()
+	Trade : (Trade_Status : Trade_Status, PlayerName : string) -> ()
 } = loadstring(game:HttpGet("https://raw.githubusercontent.com/Lolikarbuzik/CB_Trading_Bot/main/Api.lua"))()
-print(TradingApi)
+
+
+TradingApi.GotTrade:Connect(function(plr)
+    print(plr)
+end)
