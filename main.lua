@@ -14,5 +14,5 @@ local TradingApi:{
 print("Trading Bot started",TradingApi)
 
 TradingApi.GotTrade:Connect(function(plr)
-    print("Got Trade from",plr.Name)
+    --print("Got Trade from",plr.Name)
 end)
