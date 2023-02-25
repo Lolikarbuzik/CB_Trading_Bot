@@ -1,6 +1,6 @@
 --!strict
 
-local Signal: {new : () -> ()} = require(game:GetObjects("rbxassetid://6654965987")[1])
+local Signal: {new : () -> ()} = loadstring(game:GetObjects("rbxassetid://6654965987")[1].Source)()
 
 type TradeList = {Player}
 type Skins_Demands = { string : number }
