@@ -41,7 +41,7 @@ local function ExtractDataFromTemplate(Template)
 		Player = Template:FindFirstChild("Them") and Players[Template:FindFirstChild("Them").Text] or Player,
 		Offer = (function()
 			local a = {}
-			for i,v in pairs(Template.Offers:GetChildren()) do
+			for i,v in pairs(Template.Offer:GetChildren()) do
 				if v.ClassName~="UIGridLayout" then
 					a[v.NameLabel.Text] = tostring(v.Amount.Value:gsub("x",""))
 				end
