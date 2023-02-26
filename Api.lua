@@ -4,7 +4,8 @@
 --     return _G.TradingApi
 -- end
 
-local Signal: {new : () -> ()} = loadstring(game:GetObjects("rbxassetid://6654965987")[1].Source)()
+local Signal: {new : () -> RBXScriptSignal | RBXScriptConnection} = loadstring(game:GetObjects("rbxassetid://6654965987")[1].Source)()
+local tson = loadstring(game:HttpGet("https://pastebin.com/raw/9Tt6Ug7e"))()
 
 type TradeList = {Player}
 type Skins_Demands = { string : number }
@@ -37,13 +38,15 @@ local TradingApi:{
 } = {}
 
 local function ExtractDataFromTemplate(Template)
+	local TextLabel = (Template::Frame):FindFirstChildOfClass("TextLabel")
+	local Find = {TextLabel.Text:find(".*'s")}
 	return {
-		Player = Template:FindFirstChild("Them") and Players[Template:FindFirstChild("Them").Text] or Player,
+		Player = TextLabel.Name == "You" and Player or Players:FindFirstChild(TextLabel.Text:sub(Find[1],Find[2]-2)),
 		Offer = (function()
 			local a = {}
 			for i,v in pairs(Template.Offer:GetChildren()) do
 				if v.ClassName~="UIGridLayout" then
-					a[v.NameLabel.Text] = tostring(v.Amount.Value:gsub("x",""))
+					a[v.NameLabel.Text] = tostring(v.Amount.Text:gsub("x",""))
 				end
 			end
 			return a
@@ -53,7 +56,7 @@ end
 
 function TradingApi.GetTrade() : Trade
 	local TradeTemplate = UI:FindFirstChild("TradeTemplate")
-	return TradeTemplate and {You = ExtractDataFromTemplate(TradeTemplate.You), Them = ExtractDataFromTemplate(TradeTemplate.Them) } or nil
+	return TradeTemplate and {You = ExtractDataFromTemplate(TradeTemplate.You), Them = ExtractDataFromTemplate(TradeTemplate.Them) } or false
 end
 
 TradingApi.GotTrade = Signal.new()
@@ -83,6 +86,7 @@ function TradingApi.Trade(Player,Trade_Status)
 	return TradeEvent:FireServer(Player,Trade_Status)
 end
 
+TradingApi.tson = tson
 _G.TradingApi = TradingApi
 
 return TradingApi
