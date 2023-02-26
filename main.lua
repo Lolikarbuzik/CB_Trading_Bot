@@ -54,7 +54,13 @@ do
 		• Check if player is currently trading if not. Tell player he isnt trading
 		• Get AnalyzeResult from TradeAnalyzer
 			• Get Trade data -> { You , Them }
-			
+
+			• How trade can be "positive":
+				• We get +value from trade, factors:
+					• Skin base value (not accurate)
+					• Skin demand 
+
+			• Return a calculated Result 
 		• Tell Player AnalyzeResult
 	2. TradeAll: 
 		• Sends Trade requests to all players
