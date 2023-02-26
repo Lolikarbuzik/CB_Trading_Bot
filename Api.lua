@@ -83,7 +83,7 @@ function TradingApi.Inventory(Player) : Inventory
 	return InventoryEvent:InvokeServer(Player)
 end
 function TradingApi.Trade(Player,Trade_Status)
-	return TradeEvent:FireServer(Player,Trade_Status)
+	return TradeEvent:FireServer(Players:FindFirstChild(tostring(Player)),Trade_Status)
 end
 
 TradingApi.tson = tson
