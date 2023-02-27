@@ -71,9 +71,9 @@ do
 
 	local AnalyzerBtn = main:AddButton("Trade Analyzer",function()
 		local Trade = TradingApi.GetTrade()
-		if not Trade then return notify({Text = "You have to be in a trade!",Title = n}) end
+		if not Trade then return notify({Text = "You have to be in a trade!"}) end
 		local AnalyzeResult = TradingApi:TradeAnalyzer()
-		notify({Text = AnalyzeResult.Reason:format(AnalyzeResult.Result),Title = n})
+		notify({Text = AnalyzeResult.Reason:format(AnalyzeResult.Result)})
 	end)
 
 	local TradeAll = main:AddButton("Trade all",function()

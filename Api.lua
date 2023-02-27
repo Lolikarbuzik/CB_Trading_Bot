@@ -109,12 +109,14 @@ end
 
 function TradingApi.TradeAnalyzer(Trade : Trade) : AnalyzeResult
 	Trade = Trade or TradingApi.GetTrade()
-	if not Trade then return end
-	return {Result = math.floor(Trade.Them.Value / Trade.You.Value*100),Reason = "Your result is %s"}
+	if not Trade then return warn("no trade") end
+
+	local Result = (Trade.Them.Value / Trade.You.Value	) - 1
+
+	return {Result = Result,Reason = "Your result is %s"}
 end
 
-print(tson(TradingApi.GetTrade()))
-
+print(tson(TradingApi.TradeAnalyzer()))
 
 TradingApi.tson = tson
 _G.TradingApi = TradingApi
