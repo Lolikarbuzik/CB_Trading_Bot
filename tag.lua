@@ -1,8 +1,8 @@
-local function stripTag(Tag)
-    Tag = Tag.." | "
-    local Tags = Tag:split(" | ")
-    return {Weapon = Tags[1],Skin = Tags[2]}
+local function lastDigits(n, amount)
+	local tsn = tostring(n)
+	local a, b = tsn:find(".*%.")
+    if not a or not b then return n end
+	return tostring(tsn:sub(1, b + amount))
 end
 
-local stripped = stripTag("Falchion Knife | Topaz")
-print(stripped.Skin,stripped.Weapon)
+print(lastDigits(1.34443333,2))

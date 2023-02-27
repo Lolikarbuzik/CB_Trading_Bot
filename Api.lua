@@ -24,6 +24,12 @@ local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local UI = Player.PlayerGui.UI
 
+local function lastDigits(n, amount)
+	local tsn = tostring(n)
+	local a, b = tsn:find(".*%.")
+    if not a or not b then return n end
+	return tostring(tsn:sub(1, b + amount))
+end
 
 local InventoryEvent:RemoteFunction = Remotes.Inventory
 local TradeEvent: RemoteEvent = Remotes.Trade
@@ -35,17 +41,19 @@ local TradingApi:{
 	Inventory : (Player?) -> Inventory,
 	Trade : (Trade_Status : Trade_Status, PlayerName : string) -> (),
 	TradeAnalyzer : (Trade2 : TradeList, Trade1 : TradeList?) -> (AnalyzeResult),
-	GetTrade : () -> ()
+	GetTrade : () -> (),
+	sum : (Skins_Demands) -> (number)
 } = {}
 
-local function sum(Skins)
+local function TradingApi.sum(Skins)
 	local s = 0
 	for SkinName,Quantity in pairs(type(Skins)=="table" and Skins or {[Skins]=1}) do
-		print(SkinName..Quantity)
 		s+=(TradingApi.SkinsList[SkinName] or 0)*(Quantity or 0)
 	end
 	return s
 end
+
+local sum = TradingApi.sum
 
 local function ExtractDataFromTemplate(Template)
 	local TextLabel = (Template::Frame):FindFirstChildOfClass("TextLabel")
@@ -111,12 +119,15 @@ function TradingApi.TradeAnalyzer(Trade : Trade) : AnalyzeResult
 	Trade = Trade or TradingApi.GetTrade()
 	if not Trade then return warn("no trade") end
 
-	local Result = (Trade.Them.Value / Trade.You.Value	) - 1
+	local Result = (Trade.Them.Value / Trade.You.Value	)
 
-	return {Result = Result,Reason = "Your result is %s"}
+	-- trade is negative
+	if Trade.You.Value > Trade.Them.Value then
+		Result = -(Trade.You.Value / Trade.Them.Value)
+	end
+
+	return {Result = lastDigits(Result,2),Reason = "Your result is %s"}
 end
-
-print(tson(TradingApi.TradeAnalyzer()))
 
 TradingApi.tson = tson
 _G.TradingApi = TradingApi
