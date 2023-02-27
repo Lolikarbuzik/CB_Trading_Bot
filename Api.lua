@@ -45,7 +45,7 @@ local TradingApi:{
 	sum : (Skins_Demands) -> (number)
 } = {}
 
-local function TradingApi.sum(Skins)
+local sum = function(Skins)
 	local s = 0
 	for SkinName,Quantity in pairs(type(Skins)=="table" and Skins or {[Skins]=1}) do
 		s+=(TradingApi.SkinsList[SkinName] or 0)*(Quantity or 0)
@@ -53,7 +53,7 @@ local function TradingApi.sum(Skins)
 	return s
 end
 
-local sum = TradingApi.sum
+TradingApi.sum = sum
 
 local function ExtractDataFromTemplate(Template)
 	local TextLabel = (Template::Frame):FindFirstChildOfClass("TextLabel")
@@ -76,6 +76,7 @@ local function ExtractDataFromTemplate(Template)
 	trd.Value = sum(trd.Offer)
 	return trd 
 end
+
 
 function TradingApi.GetTrade() : Trade
 	local TradeTemplate = UI:FindFirstChild("TradeTemplate")
