@@ -25,8 +25,10 @@ local n = "BTrade 1.0"
 
 local lib = loadstring(game:HttpGet("https://pastebin.com/raw/eZHeDLKM"))()
 local StarterGui = game:GetService("StarterGui")
-local notify = function(text)
-	return StarterGui:SetCore("SendNotification",text)
+local notify = function(data)
+	data.Title = data.Title or n
+	print(TradingApi.tson(data))
+	return StarterGui:SetCore("SendNotification",data)
 end
 local win = lib:AddWindow(n,{
 	main_color = Color3.fromRGB(41, 74, 122),
@@ -58,7 +60,7 @@ do
 			• How trade can be "positive":
 				• We get +value from trade, factors:
 					• Skin base value (not accurate)
-					• Skin demand 
+					• Skin demandw 
 
 			• Return a calculated Result 
 		• Tell Player AnalyzeResult
@@ -69,10 +71,9 @@ do
 
 	local AnalyzerBtn = main:AddButton("Trade Analyzer",function()
 		local Trade = TradingApi.GetTrade()
-		print(Trade)
 		if not Trade then return notify({Text = "You have to be in a trade!",Title = n}) end
 		local AnalyzeResult = TradingApi:TradeAnalyzer()
-		print(TradingApi.tson(AnalyzeResult	))
+		notify({Text = AnalyzeResult.Reason:format(AnalyzeResult.Result),Title = n})
 	end)
 
 	local TradeAll = main:AddButton("Trade all",function()

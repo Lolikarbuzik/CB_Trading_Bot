@@ -1,5 +1,6 @@
 --!strict
 
+rconsoleclose()
 -- if _G.TradingApi then
 --     return _G.TradingApi
 -- end
@@ -12,7 +13,7 @@ type Skins_Demands = { string : number }
 type Inventory = {}
 type Trade_Status = "Create" | "DeclineTrade" | "SendTrade" | "GotTrade"
 type AnalyzeResult = {Result : number,Reason : string}
-type Trade = {You : {}, Them : {}}
+type Trade = {You : {Offer : {},Player : Player,Value : number}, Them : {Player : Player,Offer : {},Value : number}}
 
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -37,21 +38,35 @@ local TradingApi:{
 	GetTrade : () -> ()
 } = {}
 
+local function sum(Skins)
+	local s = 0
+	for SkinName,Quantity in pairs(type(Skins)=="table" and Skins or {[Skins]=1}) do
+		print(SkinName..Quantity)
+		s+=(TradingApi.SkinsList[SkinName] or 0)*(Quantity or 0)
+	end
+	return s
+end
+
 local function ExtractDataFromTemplate(Template)
 	local TextLabel = (Template::Frame):FindFirstChildOfClass("TextLabel")
 	local Find = {TextLabel.Text:find(".*'s")}
-	return {
+	local trd = {
 		Player = TextLabel.Name == "You" and Player or Players:FindFirstChild(TextLabel.Text:sub(Find[1],Find[2]-2)),
 		Offer = (function()
 			local a = {}
 			for i,v in pairs(Template.Offer:GetChildren()) do
 				if v.ClassName~="UIGridLayout" then
-					a[v.NameLabel.Text] = tostring(v.Amount.Text:gsub("x",""))
+					local tagdata = TradingApi.TagStrip(v.NameLabel.Text)
+					local name = tagdata.Weapon.."_"..tagdata.Skin
+					a[name] = v.Amount.Text:gsub("x","")
+					a[name] = tonumber(a[name]) or 1
 				end
 			end
 			return a
 		end)()
 	}
+	trd.Value = sum(trd.Offer)
+	return trd 
 end
 
 function TradingApi.GetTrade() : Trade
@@ -85,6 +100,21 @@ end
 function TradingApi.Trade(Player,Trade_Status)
 	return TradeEvent:FireServer(Players:FindFirstChild(tostring(Player)),Trade_Status)
 end
+
+function TradingApi.TagStrip(Tag)
+	Tag = Tag.." | "
+    local Tags = Tag:split(" | ")
+    return {Weapon = Tags[1],Skin = Tags[2]}
+end
+
+function TradingApi.TradeAnalyzer(Trade : Trade) : AnalyzeResult
+	Trade = Trade or TradingApi.GetTrade()
+	if not Trade then return end
+	return {Result = math.floor(Trade.Them.Value / Trade.You.Value*100),Reason = "Your result is %s"}
+end
+
+print(tson(TradingApi.GetTrade()))
+
 
 TradingApi.tson = tson
 _G.TradingApi = TradingApi
